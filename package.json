@@ -1,0 +1,34 @@
+{
+  "name": "liff-multiple-qr-codes-scan",
+  "version": "0.1.0",
+  "description": "A demo LIFF application to scan QR codes.",
+  "main": "index.js",
+  "scripts": {
+    "app:start": "npm start -w app",
+    "app:build": "npm run build -w app",
+    "backend:build": "npm run build -w backend",
+    "test": "npm test --workspaces",
+    "predeploy": "npm run app:build && npm run backend:build",
+    "deploy": "npm run deploy -w backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tanimon/liff-multiple-qr-code-scan.git"
+  },
+  "keywords": [
+    "LINE",
+    "LIFF",
+    "QR-code",
+    "CDK"
+  ],
+  "author": "tanimon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tanimon/liff-multiple-qr-code-scan/issues"
+  },
+  "homepage": "https://github.com/tanimon/liff-multiple-qr-code-scan#readme",
+  "workspaces": [
+    "app",
+    "backend"
+  ]
+}
