@@ -8,7 +8,7 @@
     "app:build": "npm run build -w app",
     "backend:build": "npm run build -w backend",
     "test": "npm test --workspaces",
-    "predeploy": "npm run app:build && npm run backend:build",
+    "predeploy": "NODE_ENV=development npm run app:build && npm run backend:build",
     "deploy": "npm run deploy -w backend"
   },
   "repository": {

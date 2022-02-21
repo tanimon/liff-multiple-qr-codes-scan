@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import liff from '@line/liff';
+import liff from './liff';
 
 const liffId = process.env.REACT_APP_LIFF_ID!;
 console.log(`liffId: ${liffId}`);
