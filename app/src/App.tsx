@@ -1,25 +1,14 @@
-import { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import liff from '@line/liff';
+import React from 'react';
+import QRCodeScanner from './components/QRCodeScanner';
 
-function App() {
-  const [qrCodeData, setQrCodeData] = useState('');
-  const handleScan = () => {
-    liff.scanCodeV2().then((result) => {
-      setQrCodeData(result.value ?? '');
-    });
-  };
-
+const App: React.VFC = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={handleScan}>Scan QR Code</button>
-        <p>{qrCodeData}</p>
+        <QRCodeScanner />
       </header>
     </div>
   );
-}
+};
 
 export default App;
