@@ -87,19 +87,6 @@ const QRCodeScanner: React.VFC = () => {
       </div>
     </div>
   );
-
-  // return (
-  //   <div>
-  //     <p>QR Code Scanner</p>
-  //     <div>
-  //       <video autoPlay>
-  //         <canvas width={videoWidth} height={videoHeight} />
-  //       </video>
-  //       <textarea disabled value={''} />
-  //       <button>Stop Scan</button>
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default QRCodeScanner;
