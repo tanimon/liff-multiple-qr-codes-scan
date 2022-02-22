@@ -31,7 +31,7 @@ const QRCodeScanner: React.VFC = () => {
       return;
     }
 
-    const decodeQRCode = () => {
+    const decodeQRCode = async () => {
       const context = canvasRef?.current?.getContext('2d');
       const video = videoRef?.current;
 
@@ -59,8 +59,8 @@ const QRCodeScanner: React.VFC = () => {
     };
     openCamera();
 
-    const intervalId = window.setInterval(() => {
-      decodeQRCode();
+    const intervalId = window.setInterval(async () => {
+      await decodeQRCode();
     }, 1_000 / videoFrameRate);
     intervalRef.current = intervalId;
 
