@@ -23,7 +23,7 @@ const QRCodeScanner: React.VFC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const intervalRef = useRef<number>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isContinue, setIsContinue] = useState(true);
+  const [isContinue, setIsContinue] = useState(false);
   const [qrCodeData, setQrCodeData] = useState<string[]>([]);
 
   useEffect(() => {
@@ -69,6 +69,10 @@ const QRCodeScanner: React.VFC = () => {
     };
   }, [isContinue, qrCodeData]);
 
+  const handleStart = () => {
+    setIsContinue(true);
+  };
+
   const handleStop = () => {
     setIsContinue(false);
   };
@@ -91,6 +95,7 @@ const QRCodeScanner: React.VFC = () => {
           <p>{qrCodeData.join('\n')}</p>
         </div>
         <div>
+          <button onClick={handleStart}>Start Scan</button>
           <button onClick={handleStop}>Stop Scan</button>
         </div>
       </div>
