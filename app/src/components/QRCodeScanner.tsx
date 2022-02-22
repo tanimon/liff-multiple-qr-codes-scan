@@ -27,6 +27,17 @@ const QRCodeScanner: React.VFC = () => {
   const [qrCodeData, setQrCodeData] = useState<string[]>([]);
 
   useEffect(() => {
+    const openCamera = async () => {
+      const video = videoRef.current;
+      if (video) {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+      }
+    };
+    openCamera();
+  }, []);
+
+  useEffect(() => {
     if (!isContinue) {
       return;
     }
@@ -50,14 +61,7 @@ const QRCodeScanner: React.VFC = () => {
       setQrCodeData([...qrCodeData, code.data]);
     };
 
-    const openCamera = async () => {
-      const video = videoRef.current;
-      if (video) {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = stream;
       }
-    };
-    openCamera();
 
     const intervalId = window.setInterval(async () => {
       await decodeQRCode();
