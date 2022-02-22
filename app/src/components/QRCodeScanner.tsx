@@ -23,28 +23,33 @@ const QRCodeScanner: React.VFC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const intervalRef = useRef<number>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isContinue, setIsContinue] = useState(true);
   const [qrCodeData, setQrCodeData] = useState<string[]>([]);
 
-  const decodeQRCode = () => {
-    const context = canvasRef?.current?.getContext('2d');
-    const video = videoRef?.current;
-
-    if (!context || !video) {
-      return;
-    }
-
-    context.drawImage(video, 0, 0, videoWidth, videoHeight);
-    const imageData = context.getImageData(0, 0, videoWidth, videoHeight);
-    const code = jsQR(imageData.data, videoWidth, videoHeight);
-
-    if (!code || qrCodeData.includes(code.data)) {
-      return;
-    }
-
-    setQrCodeData([...qrCodeData, code.data]);
-  };
-
   useEffect(() => {
+    if (!isContinue) {
+      return;
+    }
+
+    const decodeQRCode = () => {
+      const context = canvasRef?.current?.getContext('2d');
+      const video = videoRef?.current;
+
+      if (!context || !video) {
+        return;
+      }
+
+      context.drawImage(video, 0, 0, videoWidth, videoHeight);
+      const imageData = context.getImageData(0, 0, videoWidth, videoHeight);
+      const code = jsQR(imageData.data, videoWidth, videoHeight);
+
+      if (!code || qrCodeData.includes(code.data)) {
+        return;
+      }
+
+      setQrCodeData([...qrCodeData, code.data]);
+    };
+
     const openCamera = async () => {
       const video = videoRef.current;
       if (video) {
@@ -58,10 +63,14 @@ const QRCodeScanner: React.VFC = () => {
       decodeQRCode();
     }, 1_000 / videoFrameRate);
     intervalRef.current = intervalId;
-  });
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [isContinue, qrCodeData]);
 
   const handleStop = () => {
-    clearInterval(intervalRef.current);
+    setIsContinue(false);
   };
 
   return (
