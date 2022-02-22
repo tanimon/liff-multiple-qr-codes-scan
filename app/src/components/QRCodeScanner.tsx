@@ -23,26 +23,8 @@ const QRCodeScanner: React.VFC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const intervalRef = useRef<number>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isContinue, setIsContinue] = useState(false);
   const [qrCodeData, setQrCodeData] = useState<string[]>([]);
-
-  const decodeQRCode = () => {
-    const context = canvasRef?.current?.getContext('2d');
-    const video = videoRef?.current;
-
-    if (!context || !video) {
-      return;
-    }
-
-    context.drawImage(video, 0, 0, videoWidth, videoHeight);
-    const imageData = context.getImageData(0, 0, videoWidth, videoHeight);
-    const code = jsQR(imageData.data, videoWidth, videoHeight);
-
-    if (!code || qrCodeData.includes(code.data)) {
-      return;
-    }
-
-    setQrCodeData([...qrCodeData, code.data]);
-  };
 
   useEffect(() => {
     const openCamera = async () => {
@@ -53,15 +35,50 @@ const QRCodeScanner: React.VFC = () => {
       }
     };
     openCamera();
+  }, []);
+
+  useEffect(() => {
+    if (!isContinue) {
+      return;
+    }
+
+    const decodeQRCode = () => {
+      const context = canvasRef?.current?.getContext('2d');
+      const video = videoRef?.current;
+
+      if (!context || !video) {
+        return;
+      }
+
+      context.drawImage(video, 0, 0, videoWidth, videoHeight);
+      const imageData = context.getImageData(0, 0, videoWidth, videoHeight);
+      const code = jsQR(imageData.data, videoWidth, videoHeight);
+
+      return code?.data;
+    };
 
     const intervalId = window.setInterval(() => {
-      decodeQRCode();
+      const decodedValue = decodeQRCode();
+
+      if (!decodedValue || qrCodeData.includes(decodedValue)) {
+        return;
+      }
+
+      setQrCodeData([...qrCodeData, decodedValue]);
     }, 1_000 / videoFrameRate);
     intervalRef.current = intervalId;
-  });
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [isContinue, qrCodeData]);
+
+  const handleStart = () => {
+    setIsContinue(true);
+  };
 
   const handleStop = () => {
-    clearInterval(intervalRef.current);
+    setIsContinue(false);
   };
 
   return (
@@ -82,6 +99,7 @@ const QRCodeScanner: React.VFC = () => {
           <p>{qrCodeData.join('\n')}</p>
         </div>
         <div>
+          <button onClick={handleStart}>Start Scan</button>
           <button onClick={handleStop}>Stop Scan</button>
         </div>
       </div>
