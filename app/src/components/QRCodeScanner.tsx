@@ -42,7 +42,7 @@ const QRCodeScanner: React.VFC = () => {
       return;
     }
 
-    const decodeQRCode = async () => {
+    const decodeQRCode = () => {
       const context = canvasRef?.current?.getContext('2d');
       const video = videoRef?.current;
 
@@ -54,17 +54,17 @@ const QRCodeScanner: React.VFC = () => {
       const imageData = context.getImageData(0, 0, videoWidth, videoHeight);
       const code = jsQR(imageData.data, videoWidth, videoHeight);
 
-      if (!code || qrCodeData.includes(code.data)) {
+      return code?.data;
+    };
+
+    const intervalId = window.setInterval(() => {
+      const decodedValue = decodeQRCode();
+
+      if (!decodedValue || qrCodeData.includes(decodedValue)) {
         return;
       }
 
-      setQrCodeData([...qrCodeData, code.data]);
-    };
-
-      }
-
-    const intervalId = window.setInterval(async () => {
-      await decodeQRCode();
+      setQrCodeData([...qrCodeData, decodedValue]);
     }, 1_000 / videoFrameRate);
     intervalRef.current = intervalId;
 
